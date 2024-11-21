@@ -1,0 +1,49 @@
+ID: 1
+Name: John Doe
+Age: 29
+Salary: 3000.50
+
+ID: 2
+Name: Jane Smith
+Age: 34
+Salary: 4500.75
+
+ID: 3
+Name: Mike Johnson
+Age: 41
+Salary: 5200.00
+
+ID: 4
+Name: Emily Davis
+Age: 25
+Salary: 2800.25
+
+ID: 5
+Name: Sarah Brown
+Age: 38
+Salary: 4100.60
+
+ID: 6
+Name: Daniel White
+Age: 30
+Salary: 3900.90
+
+ID: 7
+Name: Anna Lee
+Age: 27
+Salary: 3200.50
+
+ID: 8
+Name: Chris Black
+Age: 45
+Salary: 5600.00
+
+ID: 9
+Name: Megan Carter
+Age: 33
+Salary: 4700.30
+
+ID: 10
+Name: Peter Wilson
+Age: 40
+Salary: 5100.45

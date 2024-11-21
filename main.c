@@ -104,6 +104,7 @@ int main() {
 
         switch (userOption) {
             case 1: {
+                // Add employee
                 struct employee newEmployee = getNewEmployee();
                 struct employee *temp = realloc(employees, (employeeCount + 1) * sizeof(struct employee));
                 if (!temp) {
@@ -120,6 +121,7 @@ int main() {
                 break;
             }
             case 2:
+            // List all employees
                 if (employeeCount == 0) {
                     printf("No employees found\n");
                     break;
@@ -134,6 +136,7 @@ int main() {
                 }
                 break;
             case 3: {
+                // Search employees by ID
                 int searchId;
                 printf("Enter Employee ID to search: ");
                 while (scanf("%d", &searchId) != 1) {
@@ -163,12 +166,102 @@ int main() {
 
                 break;
             }
-            case 4:
-                printf("Save employees to file\n");
+            case 4: {
+                // Save employees to file
+                if (employeeCount == 0) {
+                    printf("No employees found\n");
+                    break;
+                }
+
+                char fileName[50];
+
+                printf("Enter file name: ");
+                fgets(fileName, sizeof(fileName), stdin);
+                fileName[strcspn(fileName, "\n")] = '\0';
+
+                FILE *fptr;
+
+                fptr = fopen(fileName, "w");
+            
+                printf("\nWriting employees to file %s ...\n", fileName);
+
+                for (int i = 0; i < employeeCount; i++) {
+                    fprintf(fptr, "ID: %d\n", employees[i].id);
+                    fprintf(fptr, "Name: %s\n", employees[i].name);
+                    fprintf(fptr, "Age: %d\n", employees[i].age);
+                    fprintf(fptr, "Salary: %.2f\n\n", employees[i].salary);
+                }
+
+                fclose(fptr); 
                 break;
-            case 5:
-                printf("Load employees from file\n");
+            }
+            case 5: {
+                // Load employees from file
+                char fileName[50];
+
+                printf("Enter file name: ");
+                fgets(fileName, sizeof(fileName), stdin);
+                fileName[strcspn(fileName, "\n")] = '\0';
+
+                FILE *fptr = fopen(fileName, "r");
+                if (!fptr) {
+                    printf("There was an error while trying to open file %s\n", fileName);
+                    break;
+                }
+
+                struct employee tempEmployee;
+                int tempCount = 0;
+                struct employee *tempEmployees = NULL;
+                bool finished = false;
+                bool broken = false;
+
+                while (!finished) {
+                    if (fscanf(fptr, "ID: %d\n", &tempEmployee.id) != 1) {
+                        if (feof(fptr)) {       // end of file
+                            finished = true;
+                        } else {
+                            printf("Cannot read file, invalid format.\n");
+                            broken = true;
+                            break;
+                        }
+                    } else {
+                        fscanf(fptr, "Name: %49[^\n]\n", tempEmployee.name);
+                        fscanf(fptr, "Age: %d\n", &tempEmployee.age);
+                        fscanf(fptr, "Salary: %f\n\n", &tempEmployee.salary);
+
+                        // print all the employee info
+                        printf("ID: %d\n", tempEmployee.id);
+                        printf("Name: %s\n", tempEmployee.name);
+                        printf("Age: %d\n", tempEmployee.age);
+                        printf("Salary: %.2f\n\n", tempEmployee.salary);
+
+                        struct employee *newTemp = realloc(tempEmployees, (tempCount + 1) * sizeof(struct employee));
+                        if (!newTemp) {
+                            broken = true;
+                            fprintf(stderr, "Memory allocation failed\n");
+                            break;
+                        }
+                        tempEmployees = newTemp;
+                        tempEmployees[tempCount] = tempEmployee;
+                        tempCount++;
+                    } 
+                }
+
+                if (broken) {
+                    free(tempEmployees);
+                    fclose(fptr);
+                    break;
+                }
+
+                fclose(fptr);
+
+                free(employees);
+                employees = tempEmployees;
+                employeeCount = tempCount;
+
+                printf("Loaded %d employees from file %s\n", employeeCount, fileName);
                 break;
+            }
             case 6:
                 printf("Exiting program\n");
                 return 0;
